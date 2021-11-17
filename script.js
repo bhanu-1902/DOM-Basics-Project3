@@ -20,32 +20,63 @@ diceImage.classList.add('hidden');
 const scores = [0, 0];
 let activePlayer = 0;
 let roundScore = 0;
+let gameOn = true;
+
+const switchPlayer = function () {
+  document.getElementById(`current--${activePlayer}`).textContent = 0;
+  // document
+  //   .querySelector(`.player--${activePlayer}`)
+  //   .classList.remove('player--active');
+  activePlayer = activePlayer === 0 ? 1 : 0;
+  roundScore = 0;
+  // document
+  //   .querySelector(`.player--${activePlayer}`)
+  //   .classList.add('player--active');
+
+  currentPlayer0.classList.toggle('player--active'); //Toggle method adds class if it isn't present and removes if it is
+  currentPlayer1.classList.toggle('player--active');
+};
 
 //Rolling Die functionality
 rollDie.addEventListener('click', function () {
-  const dice = Math.trunc(Math.random() * 6) + 1;
+  if (gameOn) {
+    const dice = Math.trunc(Math.random() * 6) + 1;
 
-  diceImage.classList.remove('hidden');
+    diceImage.classList.remove('hidden');
 
-  diceImage.src = `images/dice-${dice}.png`;
+    diceImage.src = `images/dice-${dice}.png`;
 
-  if (dice !== 1) {
-    roundScore += dice;
+    if (dice !== 1) {
+      roundScore += dice;
 
-    document.getElementById(`current--${activePlayer}`).textContent =
-      roundScore;
-  } else {
-    document.getElementById(`current--${activePlayer}`).textContent = 0;
-    // document
-    //   .querySelector(`.player--${activePlayer}`)
-    //   .classList.remove('player--active');
-    activePlayer = activePlayer === 0 ? 1 : 0;
-    roundScore = 0;
-    // document
-    //   .querySelector(`.player--${activePlayer}`)
-    //   .classList.add('player--active');
+      document.getElementById(`current--${activePlayer}`).textContent =
+        roundScore;
+    } else {
+      switchPlayer();
+    }
+  }
+});
 
-    currentPlayer0.classList.toggle('player--active'); //Toggle method adds class if it isn't present and removes if it is
-    currentPlayer1.classList.toggle('player--active');
+//Holding the score functionality
+hold.addEventListener('click', function () {
+  if (gameOn) {
+    // -> Add current score to active players score
+    scores[activePlayer] += roundScore;
+
+    document.getElementById(`score--${activePlayer}`).textContent =
+      scores[activePlayer];
+
+    if (scores[activePlayer] >= 10) {
+      gameOn = false;
+      diceImage.classList.add('hidden');
+
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.add('player--winner');
+
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.remove('player--active');
+    } else switchPlayer();
   }
 });
