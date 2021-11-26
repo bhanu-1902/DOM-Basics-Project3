@@ -98,6 +98,4 @@ hold.addEventListener('click', function () {
 });
 
 //Reseting the game
-reset.addEventListener('click', function () {
-  init();
-});
+reset.addEventListener('click', init);
